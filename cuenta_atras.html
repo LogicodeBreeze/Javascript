@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Cuenta atras</title>
+    <style>
+      body{
+        text-align: center;
+        background: #00ECB9;
+        font-family: sans-serif;
+        font-weight: 100;
+      }
+
+      h1{
+        color: #396;
+        font-weight: 100;
+        font-size: 40px;
+        margin: 40px 0px 20px;
+      }
+
+      #clockdiv{
+        font-family: sans-serif;
+        color: #fff;
+        display: inline-block;
+        font-weight: 100;
+        text-align: center;
+        font-size: 30px;
+      }
+
+      #clockdiv > div{
+        padding: 10px;
+        border-radius: 3px;
+        background: #00BF96;
+        display: inline-block;
+      }
+
+      #clockdiv div > span{
+        padding: 15px;
+        border-radius: 3px;
+        background: #00816A;
+        display: inline-block;
+      }
+
+      .smalltext{
+        padding-top: 5px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body onload="CuentaRegresiva()"> 
+    <h1>Cuenta atras</h1>
+    <div id="clockdiv">
+      <div>
+        <span id="days"></span>
+        <div class="smalltext">Dias</div>
+      </div>
+      <div>
+        <span id="hours"></span>
+        <div class="smalltext">Horas</div>
+      </div>
+      <div>
+        <span id="minutes"></span>
+        <div class="smalltext">Minutos</div>
+      </div>
+      <div>
+        <span id="seconds"></span>
+        <div class="smalltext">Segundos</div>
+      </div>
+    </div>
+
+    <script>
+      function CuentaRegresiva() {
+          // Fecha final (15 días desde ahora)
+          const fechaFinal = new Date();
+          fechaFinal.setDate(fechaFinal.getDate() + 15);
+          
+          const temporizador = setInterval(() => {
+              const fechaActual = new Date();
+              const tiempoRestante = fechaFinal - fechaActual;
+              
+              // Si el tiempo se acabó
+              if (tiempoRestante <= 0) {
+                  clearInterval(temporizador);
+                  document.getElementById('clockdiv').innerHTML = "¡Cuenta finalizada!";
+                  return;
+              }
+              
+              // Calculamos las unidades de tiempo
+              const segundos = Math.floor(tiempoRestante / 1000);
+              const minutos = Math.floor(segundos / 60);
+              const horas = Math.floor(minutos / 60);
+              const dias = Math.floor(horas / 24);
+              
+             
+              document.getElementById('days').textContent = dias.toString().padStart(2, '0');
+              document.getElementById('hours').textContent = (horas % 24).toString().padStart(2, '0');
+              document.getElementById('minutes').textContent = (minutos % 60).toString().padStart(2, '0');
+              document.getElementById('seconds').textContent = (segundos % 60).toString().padStart(2, '0');
+          }, 1000);}
+    </script>
+  </body>
+</html>
