@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="">
+    <title>Color aleatorio</title>
+
+    <style>
+
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    text-align: center;
+    height: 100vh;
+    background-color:#81c1bd;
+}
+
+.flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#contenedor {
+height: 200px;
+width: 450px;
+flex-wrap: wrap;
+flex-direction: column;
+
+}
+#color{
+    font-size: 2em;
+    font-weight: bold;
+}
+button{
+    padding: 1em;
+    margin: 1em;
+    border-radius: 5%;
+    user-select: none;
+    cursor: pointer;
+    transition-duration: 0.5s;
+    border: none;
+    background-color: unset;
+    
+}
+
+    </style>
+</head>
+
+<body class="flex">
+    
+    <div id="contenedor" class="flex">
+<p id="color">Cualquiera</p>
+
+<button id="button">Cambiar color</button>
+
+    </div>
+
+    <script>
+
+
+const boton= document.getElementById("button");
+
+const color=document.getElementById("color");
+
+function generarColor(){
+
+let digitos="0123456789ABCDEF";
+let color='#';
+
+for(let i=0;i<6;i++){
+    
+    let indiceAleatorio=Math.floor(Math.random()*16);
+    //agregar codigo al color
+    
+    color += digitos[indiceAleatorio];
+
+  
+/*Iteración	indiceAleatorio (Ej.)	digitos[indiceAleatorio]	color 
+    1	        10 ('A')	                'A'                   #A
+    2	        3 ('3')	                    '3'	                  #A3
+    3	        14 ('E')	                'E'	                  #A3E
+
+
+    */
+}
+return color;
+
+}
+
+boton.addEventListener("click",()=>{
+
+let colorAleatorio=generarColor();
+document.body.style.background=colorAleatorio;
+color.textContent=colorAleatorio;
+
+})
+
+    </script>
+
+
+</body>
+</html>
