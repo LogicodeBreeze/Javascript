@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Stickman Runner Funcional</title>
+<style>
+  body{margin:0;overflow:hidden;font-family:sans-serif;color:black;}
+  canvas{display:block;}
+  #hud{position:fixed;top:10px;left:10px;font-size:20px;}
+</style>
+</head>
+<body>
+
+<div id="hud">Puntuación: <span id="score">0</span></div>
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let scoreEl = document.getElementById('score');
+let score = 0;
+let gameOver = false;
+
+// Stickman
+let stickman = {
+    x: 100,
+    y: canvas.height - 120,
+    width: 20,
+    height: 50,
+    vy: 0,
+    jumping: false
+};
+
+// Obstáculos
+let obstacles = [];
+let gravity = 0.8;
+
+// Eventos salto
+window.addEventListener('keydown', e=>{
+    if(e.key === ' ' && !stickman.jumping){
+        stickman.vy = -15;
+        stickman.jumping = true;
+    }
+});
+
+// Crear obstáculos
+function spawnObstacle(){
+    const h = 50 + Math.random()*50;
+    obstacles.push({
+        x: canvas.width,
+        y: canvas.height - h,
+        width: 20,
+        height: h
+    });
+}
+setInterval(()=>{
+    if(!gameOver) spawnObstacle();
+}, 1500);
+
+// Actualizar juego
+function update(){
+    if(gameOver) return;
+
+    // Física stickman
+    stickman.vy += gravity;
+    stickman.y += stickman.vy;
+    if(stickman.y > canvas.height - stickman.height){
+        stickman.y = canvas.height - stickman.height;
+        stickman.vy = 0;
+        stickman.jumping = false;
+    }
+
+    // Mover obstáculos
+    obstacles.forEach((o, i)=>{
+        o.x -= 6;
+
+        // Colisión
+        if(stickman.x < o.x + o.width &&
+           stickman.x + stickman.width > o.x &&
+           stickman.y < o.y + o.height &&
+           stickman.y + stickman.height > o.y){
+               gameOver = true;
+           }
+
+        // Si se pasa
+        if(o.x + o.width < 0){
+            obstacles.splice(i,1);
+            score++;
+            scoreEl.textContent = score;
+        }
+    });
+}
+
+// Dibujar stickman
+function drawStickman(){
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 3;
+
+    // Cabeza
+    ctx.beginPath();
+    ctx.arc(stickman.x + stickman.width/2, stickman.y + 10, 10, 0, Math.PI*2);
+    ctx.stroke();
+
+    // Cuerpo
+    ctx.beginPath();
+    ctx.moveTo(stickman.x + stickman.width/2, stickman.y + 20);
+    ctx.lineTo(stickman.x + stickman.width/2, stickman.y + 40);
+    ctx.stroke();
+
+    // Brazos
+    ctx.beginPath();
+    ctx.moveTo(stickman.x + stickman.width/2 - 10, stickman.y + 30);
+    ctx.lineTo(stickman.x + stickman.width/2 + 10, stickman.y + 30);
+    ctx.stroke();
+
+    // Piernas
+    ctx.beginPath();
+    ctx.moveTo(stickman.x + stickman.width/2, stickman.y + 40);
+    ctx.lineTo(stickman.x + stickman.width/2 - 10, stickman.y + 50);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(stickman.x + stickman.width/2, stickman.y + 40);
+    ctx.lineTo(stickman.x + stickman.width/2 + 10, stickman.y + 50);
+    ctx.stroke();
+}
+
+// Dibujar obstáculos
+function drawObstacles(){
+    ctx.fillStyle = 'black';
+    obstacles.forEach(o=>{
+        ctx.fillRect(o.x, o.y, o.width, o.height);
+    });
+}
+
+// Loop principal
+function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    update();
+    drawStickman();
+    drawObstacles();
+
+    if(gameOver){
+        ctx.fillStyle = 'black';
+        ctx.font = '50px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
+    } else {
+        requestAnimationFrame(loop);
+    }
+}
+
+loop();
+</script>
+
+</body>
+</html>
