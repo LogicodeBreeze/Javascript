@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Curiosidades de Animales</title>
+<style>
+  body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    overflow:hidden;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+
+  h1 {
+    margin-bottom:20px;
+    color:#333;
+  }
+
+  button {
+    background:#fff;
+    border:2px solid #00b894;
+    color:#00b894;
+    font-size:16px;
+    padding:10px 20px;
+    margin:10px;
+    border-radius:8px;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background:#00b894;
+    color:#fff;
+  }
+
+  .bubble {
+    position:absolute;
+    padding:10px 15px;
+    border-radius:20px;
+    background: rgba(0,184,148,0.8);
+    color:white;
+    font-weight:bold;
+    font-size:16px;
+    pointer-events:none;
+    white-space:nowrap;
+    animation: floatUp 4s forwards;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0); opacity:1; }
+    100% { transform: translateY(-200px) translateX(20px); opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Curiosidades de animales </h1>
+<button id="animalFactBtn">Nueva Curiosidad</button>
+
+<script>
+const animalFactBtn = document.getElementById('animalFactBtn');
+
+// Lista de curiosidades
+const animalFacts = [
+  "Los elefantes pueden reconocer su reflejo en un espejo.",
+  "Los pulpos tienen tres corazones.",
+  "Los delfines tienen nombres propios.",
+  "Algunas ranas pueden congelarse y volver a la vida.",
+  "Los flamencos nacen grises, no rosas.",
+  "Los cuervos pueden usar herramientas.",
+  "Las tortugas pueden respirar por el trasero.",
+  "Los gatos tienen más huesos en el cuerpo que los humanos."
+];
+
+// Función para mostrar burbuja
+function showBubble(text){
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+  
+  // posición aleatoria horizontal
+  bubble.style.left = Math.random() * (window.innerWidth - 150) + 'px';
+  bubble.style.bottom = '20px';
+  
+  document.body.appendChild(bubble);
+
+  // eliminar después de 4s
+  setTimeout(()=> bubble.remove(), 4000);
+}
+
+animalFactBtn.addEventListener('click', ()=>{
+  const fact = animalFacts[Math.floor(Math.random() * animalFacts.length)];
+  showBubble(fact);
+});
+</script>
+
+</body>
+</html>
